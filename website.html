@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MarketTorq</title>
+<link rel="icon" type="image/png" href="markettorq.png">
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #121212;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    flex-direction: column;
+  }
+  input[type="text"] {
+    padding: 10px;
+    width: 300px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    border: none;
+    font-size: 16px;
+  }
+  table {
+    border-collapse: collapse;
+    width: 95%;
+    max-width: 1200px;
+    background: #1e1e1e;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  th, td {
+    padding: 12px 15px;
+    text-align: left;
+  }
+  th {
+    background: #333;
+    font-size: 16px;
+  }
+  tr:nth-child(even) {
+    background: #2a2a2a;
+  }
+  .rising { color: #00ff7f; }
+  .falling { color: #ff4c4c; }
+  .equal { color: #ffff00; }
+</style>
+</head>
+<body>
+
+<h1>Car Prices</h1>
+<input type="text" id="searchInput" placeholder="Search for a car...">
+
+<table id="carTable">
+  <thead>
+    <tr>
+      <th>Car Name</th>
+      <th>Value</th>
+      <th>Trend</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>Merquis G Wafer</td><td>182.04M</td><td class="equal">🟰 Equal (+0.00M / +0.00%)</td></tr>
+    <tr><td>Porx JT3 RF</td><td>94.10M</td><td class="falling">📉 Falling (-2.35M / -2.44%)</td></tr>
+    <tr><td>Mata FX7</td><td>36.14M</td><td class="falling">📉 Falling (-2.59M / -6.69%)</td></tr>
+    <tr><td>Porx JT2 RF</td><td>18.58M</td><td class="falling">📉 Falling (-3.69M / -16.57%)</td></tr>
+    <tr><td>Lambemos Iris</td><td>14.28M</td><td class="rising">📈 Rising (+1.05M / +7.94%)</td></tr>
+    <tr><td>DOGO Desafio</td><td>14.05M</td><td class="falling">📉 Falling (-0.92M / -6.15%)</td></tr>
+    <tr><td>Missah JTF</td><td>12.83M</td><td class="falling">📉 Falling (-0.85M / -6.21%)</td></tr>
+    <tr><td>Missah Groundline F34</td><td>10.69M</td><td class="rising">📈 Rising (+0.54M / +5.32%)</td></tr>
+    <tr><td>McLumber 520</td><td>10.57M</td><td class="rising">📈 Rising (+0.04M / +0.38%)</td></tr>
+    <tr><td>Lambemos Golhoes</td><td>8.81M</td><td class="falling">📉 Falling (-0.24M / -2.65%)</td></tr>
+    <tr><td>Missah Groundline F32</td><td>6.94M</td><td class="falling">📉 Falling (-0.03M / -0.43%)</td></tr>
+    <tr><td>BNV K3 G</td><td>6.56M</td><td class="equal">🟰 Equal (+0.00M / +0.00%)</td></tr>
+    <tr><td>Toyoda Supwa</td><td>4.60M</td><td class="rising">📈 Rising (+0.05M / +1.10%)</td></tr>
+    <tr><td>Toyoda Supwa A90</td><td>4.30M</td><td class="rising">📈 Rising (+0.20M / +4.88%)</td></tr>
+    <tr><td>Ropes Ruyter Shadow</td><td>4.15M</td><td class="falling">📉 Falling (-0.55M / -11.70%)</td></tr>
+    <tr><td>Chule Curgette C7</td><td>4.15M</td><td class="falling">📉 Falling (-0.21M / -4.82%)</td></tr>
+    <tr><td>Holde NisX</td><td>3.75M</td><td class="falling">📉 Falling (-0.22M / -5.54%)</td></tr>
+    <tr><td>Holde S2k</td><td>3.59M</td><td class="rising">📈 Rising (+0.15M / +4.36%)</td></tr>
+    <tr><td>Four Mustank 70s</td><td>3.40M</td><td class="falling">📉 Falling (-0.27M / -7.36%)</td></tr>
+    <tr><td>Kart</td><td>3.32M</td><td class="falling">📉 Falling (-0.69M / -17.21%)</td></tr>
+    <tr><td>Mata Piada</td><td>3.18M</td><td class="falling">📉 Falling (-0.57M / -15.20%)</td></tr>
+    <tr><td>Sucato Empresa</td><td>3.01M</td><td class="rising">📈 Rising (+0.01M / +0.33%)</td></tr>
+    <tr><td>Mandalorian JBC-12</td><td>2.72M</td><td class="falling">📉 Falling (-0.28M / -9.33%)</td></tr>
+    <tr><td>Auidy F8 Performance</td><td>2.69M</td><td class="falling">📉 Falling (-0.15M / -5.28%)</td></tr>
+    <tr><td>Auidy F8</td><td>2.57M</td><td class="rising">📈 Rising (+0.20M / +8.44%)</td></tr>
+    <tr><td>Toyoda TR2</td><td>2.45M</td><td class="falling">📉 Falling (-0.21M / -7.89%)</td></tr>
+    <tr><td>Leskus RFC</td><td>2.10M</td><td class="falling">📉 Falling (-0.46M / -17.97%)</td></tr>
+    <tr><td>Matsu Lanca 4x4</td><td>1.19M</td><td class="rising">📈 Rising (+0.08M / +7.21%)</td></tr>
+    <tr><td>Missah Silva</td><td>1.17M</td><td class="rising">📈 Rising (+0.01M / +0.86%)</td></tr>
+    <tr><td>DOGO Carrega</td><td>1.09M</td><td class="falling">📉 Falling (-0.19M / -14.84%)</td></tr>
+    <tr><td>Merquis ZLA 45</td><td>1.09M</td><td class="falling">📉 Falling (-0.03M / -2.68%)</td></tr>
+    <tr><td>Fia-Te Double</td><td>1.02M</td><td class="rising">📈 Rising (+244.7K / +31.56%)</td></tr>
+    <tr><td>BNV K4 G</td><td>997K</td><td class="rising">📈 Rising (+525.5K / +111.48%)</td></tr>
+    <tr><td>Merquis GLF63</td><td>860K</td><td class="equal">🟰 Equal (+0K / +0%)</td></tr>
+    <tr><td>Missah 750x</td><td>850K</td><td class="falling">📉 Falling (-55.9K / -6.17%)</td></tr>
+    <tr><td>Skami Truck</td><td>507K</td><td class="rising">📈 Rising (+79.2K / +18.51%)</td></tr>
+    <tr><td>BNV K3 F</td><td>460K</td><td class="falling">📉 Falling (-36K / -7.26%)</td></tr>
+    <tr><td>BNV K340i</td><td>459K</td><td class="rising">📈 Rising (+12.7K / +2.85%)</td></tr>
+    <tr><td>BNV K140</td><td>453K</td><td class="rising">📈 Rising (+5K / +1.12%)</td></tr>
+    <tr><td>Auidy RF6</td><td>483K</td><td class="rising">📈 Rising (+63K / +15.00%)</td></tr>
+    <tr><td>Auidy V7</td><td>418K</td><td class="rising">📈 Rising (+19.2K / +4.81%)</td></tr>
+    <tr><td>Merquis SLX</td><td>410K</td><td class="falling">📉 Falling (-1K / -0.24%)</td></tr>
+    <tr><td>BNV K8</td><td>406K</td><td class="rising">📈 Rising (+13K / +3.31%)</td></tr>
+    <tr><td>Merquis JF</td><td>403K</td><td class="falling">📉 Falling (-43.5K / -9.74%)</td></tr>
+    <tr><td>Auidy V8</td><td>270K</td><td class="rising">📈 Rising (+47.1K / +21.13%)</td></tr>
+    <tr><td>Ratos Rotos Esporte</td><td>234K</td><td class="falling">📉 Falling (-12K / -4.88%)</td></tr>
+    <tr><td>Chule Curgete</td><td>212K</td><td class="rising">📈 Rising (+7K / +3.41%)</td></tr>
+    <tr><td>Merquis F55</td><td>181K</td><td class="falling">📉 Falling (-19K / -9.50%)</td></tr>
+    <tr><td>Auidy RF3 Sedan</td><td>171K</td><td class="rising">📈 Rising (+13.4K / +8.50%)</td></tr>
+    <tr><td>Auidy RF3</td><td>147K</td><td class="rising">📈 Rising (+5K / +3.52%)</td></tr>
+    <tr><td>Mine Copa S</td><td>142K</td><td class="falling">📉 Falling (-47K / -24.87%)</td></tr>
+    <tr><td>Holde TipeRar</td><td>141K</td><td class="falling">📉 Falling (-22K / -13.50%)</td></tr>
+    <tr><td>Toyoda AFF67</td><td>111K</td><td class="falling">📉 Falling (-22.8K / -17.04%)</td></tr>
+    <tr><td>Fia-Te Alberto 300</td><td>106K</td><td class="rising">📈 Rising (+46.7K / +78.75%)</td></tr>
+    <tr><td>Lokswag Brasiuiu</td><td>96K</td><td class="rising">📈 Rising (+14.5K / +17.79%)</td></tr>
+    <tr><td>Holde Proluiz</td><td>94K</td><td class="falling">📉 Falling (-28K / -22.95%)</td></tr>
+    <tr><td>Fia-Te 10026p</td><td>66K</td><td class="rising">📈 Rising (+7.2K / +12.24%)</td></tr>
+  </tbody>
+</table>
+
+<script>
+const searchInput = document.getElementById("searchInput");
+const table = document.getElementById("carTable").getElementsByTagName('tbody')[0];
+
+searchInput.addEventListener("keyup", function() {
+  const filter = this.value.toLowerCase();
+  const rows = table.getElementsByTagName("tr");
+  for (let i = 0; i < rows.length; i++) {
+    const td = rows[i].getElementsByTagName("td")[0];
+    rows[i].style.display = td.textContent.toLowerCase().includes(filter) ? "" : "none";
+  }
+});
+</script>
+
+</body>
+</html>
