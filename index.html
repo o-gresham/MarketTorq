@@ -4,108 +4,88 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Fix It Up Market</title>
+<link rel="icon" href="markettorq.png" type="image/png">
 
 <style>
-body{
-font-family:Arial;
-background:#121212;
-color:white;
-margin:0;
+body {
+  font-family: Arial;
+  background: #121212;
+  color: white;
+  margin: 0;
 }
 
-.container{
-max-width:1100px;
-margin:auto;
-padding:20px;
+.container {
+  max-width: 1100px;
+  margin: auto;
+  padding: 20px;
 }
 
-h1{
-margin-bottom:5px;
-text-align:center;
+h1 {
+  margin-bottom: 5px;
+  text-align: center;
 }
 
-.topbar{
-text-align:center;
-margin-bottom:20px;
+.topbar {
+  text-align: center;
+  margin-bottom: 20px;
 }
 
-input{
-padding:10px;
-width:280px;
-border-radius:6px;
-border:none;
-margin-top:10px;
+input {
+  padding: 10px;
+  width: 280px;
+  border-radius: 6px;
+  border: none;
+  margin-top: 10px;
 }
 
-.cards{
-display:flex;
-gap:20px;
-margin-bottom:20px;
-flex-wrap:wrap;
-justify-content:center;
+.cards {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
-.card{
-background:#1e1e1e;
-padding:15px;
-border-radius:10px;
-min-width:200px;
-text-align:center;
+.card {
+  background: #1e1e1e;
+  padding: 15px;
+  border-radius: 10px;
+  min-width: 200px;
+  text-align: center;
 }
 
-.ad{
-margin:20px auto;
-padding:25px;
-background:#2a2a2a;
-text-align:center;
-border-radius:10px;
-max-width:600px;
+.tablewrap {
+  background: #1e1e1e;
+  border-radius: 12px;
+  overflow: hidden;
 }
 
-.tablewrap{
-background:#1e1e1e;
-border-radius:12px;
-overflow:hidden;
+table {
+  width: 100%;
+  border-collapse: collapse;
 }
 
-table{
-width:100%;
-border-collapse:collapse;
+th, td {
+  padding: 12px;
+  text-align: left;
 }
 
-th,td{
-padding:12px;
-text-align:left;
+th {
+  background: #333;
+  cursor: pointer;
 }
 
-th{
-background:#333;
-cursor:pointer;
+tr:nth-child(even) {
+  background: #2a2a2a;
 }
 
-tr:nth-child(even){
-background:#2a2a2a;
-}
+.rising { color: #00ff7f; }
+.falling { color: #ff4c4c; }
+.equal { color: #ffff00; }
 
-.rising{color:#00ff7f;}
-.falling{color:#ff4c4c;}
-.equal{color:#ffff00;}
-
-.support{
-display:block;
-width:200px;
-margin:30px auto;
-padding:12px;
-background:#ff5a5f;
-color:white;
-text-decoration:none;
-border-radius:8px;
-text-align:center;
-}
-
-.loader{
-text-align:center;
-padding:40px;
+.loader {
+  text-align: center;
+  padding: 40px;
 }
 </style>
 </head>
@@ -114,122 +94,104 @@ padding:40px;
 
 <div class="container">
 
-<div class="topbar">
-<h1>Fix It Up Market</h1>
-<div id="updated">Loading data...</div>
-<input id="search" placeholder="Search car...">
-</div>
+  <div class="topbar">
+    <h1>Fix It Up Market</h1>
+    <div id="updated">Loading data...</div>
+    <input id="search" placeholder="Search car...">
+  </div>
 
-<div class="cards">
-<div class="card" id="topRise">Top Rising: ...</div>
-<div class="card" id="topFall">Top Falling: ...</div>
-</div>
+  <div class="cards">
+    <div class="card" id="topRise">Top Rising: ...</div>
+    <div class="card" id="topFall">Top Falling: ...</div>
+  </div>
 
-<div class="ad">AD SPACE</div>
+  <div class="tablewrap">
+    <div id="loader" class="loader">Loading market data...</div>
 
-<div class="tablewrap">
-<div id="loader" class="loader">Loading market data...</div>
-
-<table id="table" style="display:none">
-<thead>
-<tr>
-<th>Car</th>
-<th onclick="sortValue()">Value ⬍</th>
-<th>Trend</th>
-</tr>
-</thead>
-<tbody></tbody>
-</table>
-
-</div>
-
-<a class="support" href="https://ko-fi.com/YOURNAME" target="_blank">Support ❤️</a>
+    <table id="table" style="display:none">
+      <thead>
+        <tr>
+          <th>Car</th>
+          <th onclick="sortValue()">Value ⬍</th>
+          <th>Trend</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
 
 </div>
 
 <script>
-const url="https://docs.google.com/spreadsheets/d/e/2PACX-1vRE60oqaG5HcOECOZAnHePMDyl_G26IPHIbGEJjCleEg10Kwu-tLUvrDi-8WYos4PMz5V_EIQ07OYzz/pub?output=csv";
+const url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRE60oqaG5HcOECOZAnHePMDyl_G26IPHIbGEJjCleEg10Kwu-tLUvrDi-8WYos4PMz5V_EIQ07OYzz/pub?output=csv";
 
-let rowsData=[];
-let asc=true;
+let rowsData = [];
+let asc = true;
 
 function parseValue(v){
-if(v.includes("M")) return parseFloat(v)*1000000;
-if(v.includes("K")) return parseFloat(v)*1000;
-return parseFloat(v);
+  if(v.includes("M")) return parseFloat(v)*1000000;
+  if(v.includes("K")) return parseFloat(v)*1000;
+  return parseFloat(v);
 }
 
 fetch(url)
-.then(r=>r.text())
-.then(t=>{
+.then(r => r.text())
+.then(t => {
+  document.getElementById("loader").style.display = "none";
+  document.getElementById("table").style.display = "table";
 
-document.getElementById("loader").style.display="none";
-document.getElementById("table").style.display="table";
+  const lines = t.trim().split("\n").slice(1);
 
-const lines=t.trim().split("\n").slice(1);
+  lines.forEach(l => {
+    const c = l.split(",");
+    const valueNum = parseValue(c[1]);
+    let trendClass = "equal";
+    if(c[2].includes("+")) trendClass = "rising";
+    if(c[2].includes("-")) trendClass = "falling";
 
-lines.forEach(l=>{
-const c=l.split(",");
-const valueNum=parseValue(c[1]);
+    rowsData.push({
+      name: c[0],
+      value: c[1],
+      valueNum: valueNum,
+      trend: c[2],
+      trendClass: trendClass
+    });
+  });
 
-let trendClass="equal";
-if(c[2].includes("+")) trendClass="rising";
-if(c[2].includes("-")) trendClass="falling";
+  renderTable();
+  renderTop();
 
-rowsData.push({
-name:c[0],
-value:c[1],
-valueNum:valueNum,
-trend:c[2],
-trendClass:trendClass
-});
-});
-
-renderTable();
-renderTop();
-
-document.getElementById("updated").innerText=
-"Last Updated: "+new Date().toLocaleString();
-
+  document.getElementById("updated").innerText = "Last Updated: " + new Date().toLocaleString();
 });
 
-function renderTable(){
-const tbody=document.querySelector("tbody");
-tbody.innerHTML="";
-rowsData.forEach(r=>{
-tbody.innerHTML+=
-"<tr><td>"+r.name+"</td><td>"+r.value+"</td><td class='"+r.trendClass+"'>"+r.trend+"</td></tr>";
-});
+function renderTable() {
+  const tbody = document.querySelector("tbody");
+  tbody.innerHTML = "";
+  rowsData.forEach(r => {
+    tbody.innerHTML += `<tr><td>${r.name}</td><td>${r.value}</td><td class='${r.trendClass}'>${r.trend}</td></tr>`;
+  });
 }
 
-function sortValue(){
-rowsData.sort((a,b)=>asc?a.valueNum-b.valueNum:b.valueNum-a.valueNum);
-asc=!asc;
-renderTable();
+function sortValue() {
+  rowsData.sort((a,b) => asc ? a.valueNum - b.valueNum : b.valueNum - a.valueNum);
+  asc = !asc;
+  renderTable();
 }
 
-function renderTop(){
-const rise=rowsData.filter(r=>r.trendClass=="rising").sort((a,b)=>b.valueNum-a.valueNum)[0];
-const fall=rowsData.filter(r=>r.trendClass=="falling").sort((a,b)=>b.valueNum-a.valueNum)[0];
+function renderTop() {
+  const rise = rowsData.filter(r => r.trendClass=="rising").sort((a,b) => b.valueNum - a.valueNum)[0];
+  const fall = rowsData.filter(r => r.trendClass=="falling").sort((a,b) => b.valueNum - a.valueNum)[0];
 
-if(rise){
-document.getElementById("topRise").innerHTML=
-"<b>Top Rising</b><br>"+rise.name+"<br>"+rise.value;
+  if(rise) document.getElementById("topRise").innerHTML = `<b>Top Rising</b><br>${rise.name}<br>${rise.value}`;
+  if(fall) document.getElementById("topFall").innerHTML = `<b>Top Falling</b><br>${fall.name}<br>${fall.value}`;
 }
 
-if(fall){
-document.getElementById("topFall").innerHTML=
-"<b>Top Falling</b><br>"+fall.name+"<br>"+fall.value;
-}
-}
-
-document.getElementById("search").addEventListener("keyup",e=>{
-const f=e.target.value.toLowerCase();
-const trs=document.querySelectorAll("tbody tr");
-trs.forEach(tr=>{
-tr.style.display=
-tr.children[0].innerText.toLowerCase().includes(f)?"":"none";
-});
+document.getElementById("search").addEventListener("keyup", e => {
+  const f = e.target.value.toLowerCase();
+  const trs = document.querySelectorAll("tbody tr");
+  trs.forEach(tr => {
+    tr.style.display = tr.children[0].innerText.toLowerCase().includes(f) ? "" : "none";
+  });
 });
 </script>
 
