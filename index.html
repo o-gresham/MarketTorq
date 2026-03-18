@@ -148,8 +148,8 @@ button {
 <div id="modal" class="modal">
   <div class="modalbox">
     <h3 id="modalTitle"></h3>
-    <div>You think price should be <b id="directionText"></b></div>
-    <input id="priceInput" placeholder="Enter suggested price">
+    <div>Enter the price you think this car is worth</div>
+    <input id="priceInput" placeholder="Suggested price">
     <br><br>
     <button onclick="sendSuggestion()">Submit</button>
     <button onclick="closeModal()">Cancel</button>
@@ -171,14 +171,17 @@ function parseValue(v){
 fetch(url)
 .then(r => r.text())
 .then(t => {
+
   document.getElementById("loader").style.display = "none";
   document.getElementById("table").style.display = "table";
 
   const lines = t.trim().split("\n").slice(1);
 
   lines.forEach(l => {
+
     const c = l.split(",");
     const valueNum = parseValue(c[1]);
+
     let trendClass = "equal";
     if(c[2].includes("+")) trendClass = "rising";
     if(c[2].includes("-")) trendClass = "falling";
@@ -190,30 +193,36 @@ fetch(url)
       trend: c[2],
       trendClass: trendClass
     });
+
   });
 
   renderTable();
   document.getElementById("updated").innerText =
     "Last Updated: " + new Date().toLocaleString();
+
 });
 
 function renderTable() {
+
   const tbody = document.querySelector("tbody");
   tbody.innerHTML = "";
 
   rowsData.forEach(r => {
+
     tbody.innerHTML += `
       <tr>
         <td>${r.name}</td>
         <td>${r.value}</td>
         <td class='${r.trendClass}'>
           ${r.trend}
-          <button class="arrowbtn up" onclick="openModal('${r.name}','higher')">⬆</button>
-          <button class="arrowbtn down" onclick="openModal('${r.name}','lower')">⬇</button>
+          <button class="arrowbtn up" onclick="openModal('${r.name}')">⬆</button>
+          <button class="arrowbtn down" onclick="openModal('${r.name}')">⬇</button>
         </td>
       </tr>
     `;
+
   });
+
 }
 
 function sortValue() {
@@ -223,24 +232,23 @@ function sortValue() {
 }
 
 document.getElementById("search").addEventListener("keyup", e => {
+
   const f = e.target.value.toLowerCase();
   const trs = document.querySelectorAll("tbody tr");
+
   trs.forEach(tr => {
     tr.style.display =
       tr.children[0].innerText.toLowerCase().includes(f) ? "" : "none";
   });
+
 });
 
 let selectedCar = "";
-let selectedDirection = "";
 
-function openModal(car, dir){
+function openModal(car){
   selectedCar = car;
-  selectedDirection = dir;
-
   document.getElementById("modal").style.display = "flex";
   document.getElementById("modalTitle").innerText = car;
-  document.getElementById("directionText").innerText = dir;
 }
 
 function closeModal(){
@@ -249,18 +257,23 @@ function closeModal(){
 }
 
 function sendSuggestion(){
+
   const price = document.getElementById("priceInput").value;
 
-  fetch("https://docs.google.com/forms/d/e/YOUR_FORM_ID/formResponse", {
+  if(!price){
+    alert("enter price first");
+    return;
+  }
+
+  fetch("https://docs.google.com/forms/d/e/1FAIpQLSfSltHQYIVrIDfxjMhnZk0Qv6h0kMfAjE33cgNMEnkjpa0ucA/formResponse", {
     method:"POST",
     mode:"no-cors",
     headers:{
       "Content-Type":"application/x-www-form-urlencoded"
     },
     body:
-      "entry.111111=" + encodeURIComponent(selectedCar) +
-      "&entry.222222=" + encodeURIComponent(selectedDirection) +
-      "&entry.333333=" + encodeURIComponent(price)
+      "entry.1482059138=" + encodeURIComponent(selectedCar) +
+      "&entry.28434942=" + encodeURIComponent(price)
   });
 
   alert("Suggestion submitted 👍");
