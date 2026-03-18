@@ -71,6 +71,49 @@ tr:nth-child(even) {
   text-align: center;
   padding: 40px;
 }
+
+.arrowbtn {
+  border: none;
+  background: none;
+  font-size: 18px;
+  cursor: pointer;
+  margin-left: 6px;
+}
+
+.up { color: #00ff7f; }
+.down { color: #ff4c4c; }
+
+.modal {
+  position: fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background: rgba(0,0,0,0.7);
+  display:none;
+  align-items:center;
+  justify-content:center;
+}
+
+.modalbox {
+  background:#1e1e1e;
+  padding:25px;
+  border-radius:12px;
+  width:320px;
+  text-align:center;
+}
+
+.modalbox input {
+  width:100%;
+  margin-top:10px;
+}
+
+button {
+  padding:8px 14px;
+  border:none;
+  border-radius:6px;
+  cursor:pointer;
+}
 </style>
 </head>
 
@@ -99,6 +142,18 @@ tr:nth-child(even) {
     </table>
   </div>
 
+</div>
+
+<!-- MODAL -->
+<div id="modal" class="modal">
+  <div class="modalbox">
+    <h3 id="modalTitle"></h3>
+    <div>You think price should be <b id="directionText"></b></div>
+    <input id="priceInput" placeholder="Enter suggested price">
+    <br><br>
+    <button onclick="sendSuggestion()">Submit</button>
+    <button onclick="closeModal()">Cancel</button>
+  </div>
 </div>
 
 <script>
@@ -138,14 +193,26 @@ fetch(url)
   });
 
   renderTable();
-  document.getElementById("updated").innerText = "Last Updated: " + new Date().toLocaleString();
+  document.getElementById("updated").innerText =
+    "Last Updated: " + new Date().toLocaleString();
 });
 
 function renderTable() {
   const tbody = document.querySelector("tbody");
   tbody.innerHTML = "";
+
   rowsData.forEach(r => {
-    tbody.innerHTML += `<tr><td>${r.name}</td><td>${r.value}</td><td class='${r.trendClass}'>${r.trend}</td></tr>`;
+    tbody.innerHTML += `
+      <tr>
+        <td>${r.name}</td>
+        <td>${r.value}</td>
+        <td class='${r.trendClass}'>
+          ${r.trend}
+          <button class="arrowbtn up" onclick="openModal('${r.name}','higher')">⬆</button>
+          <button class="arrowbtn down" onclick="openModal('${r.name}','lower')">⬇</button>
+        </td>
+      </tr>
+    `;
   });
 }
 
@@ -159,9 +226,46 @@ document.getElementById("search").addEventListener("keyup", e => {
   const f = e.target.value.toLowerCase();
   const trs = document.querySelectorAll("tbody tr");
   trs.forEach(tr => {
-    tr.style.display = tr.children[0].innerText.toLowerCase().includes(f) ? "" : "none";
+    tr.style.display =
+      tr.children[0].innerText.toLowerCase().includes(f) ? "" : "none";
   });
 });
+
+let selectedCar = "";
+let selectedDirection = "";
+
+function openModal(car, dir){
+  selectedCar = car;
+  selectedDirection = dir;
+
+  document.getElementById("modal").style.display = "flex";
+  document.getElementById("modalTitle").innerText = car;
+  document.getElementById("directionText").innerText = dir;
+}
+
+function closeModal(){
+  document.getElementById("modal").style.display = "none";
+  document.getElementById("priceInput").value = "";
+}
+
+function sendSuggestion(){
+  const price = document.getElementById("priceInput").value;
+
+  fetch("https://docs.google.com/forms/d/e/YOUR_FORM_ID/formResponse", {
+    method:"POST",
+    mode:"no-cors",
+    headers:{
+      "Content-Type":"application/x-www-form-urlencoded"
+    },
+    body:
+      "entry.111111=" + encodeURIComponent(selectedCar) +
+      "&entry.222222=" + encodeURIComponent(selectedDirection) +
+      "&entry.333333=" + encodeURIComponent(price)
+  });
+
+  alert("Suggestion submitted 👍");
+  closeModal();
+}
 </script>
 
 </body>
