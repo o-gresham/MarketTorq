@@ -207,19 +207,36 @@ const cars = [
 
 const carList = document.getElementById("carList");
 
+const selectedCars = new Set();
+
 function renderCars(list){
     carList.innerHTML = "";
-    list.forEach(car=>{
+
+    list.forEach(car => {
         const index = cars.indexOf(car);
+
         const div = document.createElement("div");
-        div.className="car";
-        div.innerHTML=`
+        div.className = "car";
+
+        div.innerHTML = `
             <label>
-                <input type="checkbox" value="${index}">
+                <input type="checkbox" value="${index}"
+                    ${selectedCars.has(index) ? "checked" : ""}>
                 ${car[0]}
             </label>
             <span class="price">$${car[1].toLocaleString()}</span>
         `;
+
+        const checkbox = div.querySelector("input");
+
+        checkbox.addEventListener("change", () => {
+            if (checkbox.checked) {
+                selectedCars.add(index);
+            } else {
+                selectedCars.delete(index);
+            }
+        });
+
         carList.appendChild(div);
     });
 }
@@ -228,17 +245,17 @@ renderCars(cars);
 
 function generate(){
     const markup = parseFloat(document.getElementById("markup").value) || 1;
-    const checked = document.querySelectorAll("input[type=checkbox]:checked");
 
-    let output="**SELLING**\n\n";
+    let output = "**SELLING**\n\n";
 
-    checked.forEach(box=>{
-        const car = cars[box.value];
-        const price = Math.round(car[1]*markup).toLocaleString();
+    selectedCars.forEach(index => {
+        const car = cars[index];
+        const price = Math.round(car[1] * markup).toLocaleString();
+
         output += `${car[0]} - $${price}\n`;
     });
 
-    document.getElementById("output").value=output;
+    document.getElementById("output").value = output;
 }
 
 function copyOutput(){
@@ -248,16 +265,22 @@ function copyOutput(){
 }
 
 function selectAll(){
-    document.querySelectorAll("input[type=checkbox]").forEach(c=>c.checked=true);
+    cars.forEach((_, i) => selectedCars.add(i));
+    filterCars();
 }
 
 function clearAll(){
-    document.querySelectorAll("input[type=checkbox]").forEach(c=>c.checked=false);
+    selectedCars.clear();
+    filterCars();
 }
 
 function filterCars(){
     const q = document.getElementById("search").value.toLowerCase();
-    const filtered = cars.filter(c=>c[0].toLowerCase().includes(q));
+
+    const filtered = cars.filter(c =>
+        c[0].toLowerCase().includes(q)
+    );
+
     renderCars(filtered);
 }
 </script>
