@@ -2,282 +2,263 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<title>Car Seller Generator</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Fix It Up Market</title>
-<link rel="icon" href="markettorq.png" type="image/png">
-
 <style>
+:root {
+    --bg: #0f1117;
+    --card: #1a1d26;
+    --accent: #5aa9ff;
+    --accent2: #7cffc4;
+    --text: #e6e6e6;
+    --border: #2a2f3a;
+}
+
+* { box-sizing: border-box; }
+
 body {
-  font-family: Arial;
-  background: #121212;
-  color: white;
-  margin: 0;
+    margin: 0;
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
 }
 
 .container {
-  max-width: 1100px;
-  margin: auto;
-  padding: 20px;
+    max-width: 1100px;
+    margin: auto;
+    padding: 20px;
 }
 
 h1 {
-  margin-bottom: 5px;
-  text-align: center;
+    text-align: center;
+    margin-bottom: 20px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
-.topbar {
-  text-align: center;
-  margin-bottom: 20px;
+.controls {
+    position: sticky;
+    bottom: 0;
+    background: var(--card);
+    border-top: 1px solid var(--border);
+    padding: 15px;
+    margin-top: 20px;
+    border-radius: 12px;
 }
 
-input {
-  padding: 10px;
-  width: 280px;
-  border-radius: 6px;
-  border: none;
-  margin-top: 10px;
+.controls-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
 }
 
-.tablewrap {
-  background: #1e1e1e;
-  border-radius: 12px;
-  overflow: hidden;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-th, td {
-  padding: 12px;
-  text-align: left;
-}
-
-th {
-  background: #333;
-  cursor: pointer;
-}
-
-tr:nth-child(even) {
-  background: #2a2a2a;
-}
-
-.rising { color: #00ff7f; }
-.falling { color: #ff4c4c; }
-.equal { color: #ffff00; }
-
-.loader {
-  text-align: center;
-  padding: 40px;
-}
-
-.arrowbtn {
-  border: none;
-  background: none;
-  font-size: 18px;
-  cursor: pointer;
-  margin-left: 6px;
-}
-
-.up { color: #00ff7f; }
-.down { color: #ff4c4c; }
-
-.modal {
-  position: fixed;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
-  background: rgba(0,0,0,0.7);
-  display:none;
-  align-items:center;
-  justify-content:center;
-}
-
-.modalbox {
-  background:#1e1e1e;
-  padding:25px;
-  border-radius:12px;
-  width:320px;
-  text-align:center;
-}
-
-.modalbox input {
-  width:100%;
-  margin-top:10px;
+input[type="number"] {
+    background: #0d0f14;
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 8px;
+    border-radius: 8px;
+    width: 100px;
 }
 
 button {
-  padding:8px 14px;
-  border:none;
-  border-radius:6px;
-  cursor:pointer;
+    background: linear-gradient(135deg, var(--accent), #3c7cff);
+    border: none;
+    color: white;
+    padding: 10px 18px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+button:hover {
+    transform: translateY(-1px);
+}
+
+.copy-btn {
+    background: linear-gradient(135deg, var(--accent2), #00c97c);
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 10px;
+}
+
+.car {
+    background: var(--card);
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.price {
+    color: var(--accent2);
+    font-weight: 600;
+}
+
+textarea {
+    width: 100%;
+    height: 200px;
+    margin-top: 10px;
+    background: #0a0c10;
+    border: 1px solid var(--border);
+    color: #00ff9c;
+    padding: 12px;
+    border-radius: 10px;
+    font-family: monospace;
+}
+
+.search {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    background: #0d0f14;
+    border: 1px solid var(--border);
+    color: var(--text);
+    border-radius: 10px;
 }
 </style>
 </head>
-
 <body>
 
 <div class="container">
+<h1>Car Selling Generator</h1>
 
-  <div class="topbar">
-    <h1>Fix It Up Market</h1>
-    <div id="updated">Loading data...</div>
-    <input id="search" placeholder="Search car...">
-  </div>
+<input class="search" id="search" placeholder="Search cars..." oninput="filterCars()">
 
-  <div class="tablewrap">
-    <div id="loader" class="loader">Loading market data...</div>
+<div class="grid" id="carList"></div>
 
-    <table id="table" style="display:none">
-      <thead>
-        <tr>
-          <th>Car</th>
-          <th onclick="sortValue()">Value ⬍</th>
-          <th>Trend</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-  </div>
+<div class="controls">
+<div class="controls-row">
+<label>Markup</label>
+<input type="number" id="markup" value="1" step="0.01">
 
+<button onclick="generate()">Generate</button>
+<button class="copy-btn" onclick="copyOutput()">Copy</button>
+<button onclick="selectAll()">Select All</button>
+<button onclick="clearAll()">Clear</button>
 </div>
 
-<!-- MODAL -->
-<div id="modal" class="modal">
-  <div class="modalbox">
-    <h3 id="modalTitle"></h3>
-    <div>Enter the price you think this car is worth</div>
-    <input id="priceInput" placeholder="Suggested price">
-    <br><br>
-    <button onclick="sendSuggestion()">Submit</button>
-    <button onclick="closeModal()">Cancel</button>
-  </div>
+<textarea id="output" placeholder="Discord output appears here..."></textarea>
+</div>
 </div>
 
 <script>
-const url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRE60oqaG5HcOECOZAnHePMDyl_G26IPHIbGEJjCleEg10Kwu-tLUvrDi-8WYos4PMz5V_EIQ07OYzz/pub?output=csv";
+const cars = [
+["Merquis G Wafer", 175000000],
+["Porx JT3 RF", 102800000],
+["Mata FX7", 44900000],
+["Porx JT2 RF", 22900000],
+["Lambemos Iris", 15400000],
+["DOGO Desafio", 13300000],
+["Missah Groundline F34", 13100000],
+["McLumber 520", 12900000],
+["Lambemos Golhoes", 12700000],
+["Missah Groundline F32", 8700000],
+["Chule Curgette C7", 7300000],
+["Toyoda A90", 6100000],
+["Missah JTF", 6000000],
+["Sucato Empresa", 5460000],
+["Kart", 5460000],
+["Toyoda Supwa", 5400000],
+["Ruity Shadow", 4650000],
+["Holde S2k", 4590000],
+["Four Mustank 70s", 4420000],
+["Vemca K3 G", 3600000],
+["Holde NisX", 3890000],
+["Toyoda TR2", 3820000],
+["Porx Corre JT", 3890000],
+["Leskus PALA", 2020000],
+["Lararry 88 Pisca", 2570000],
+["Leskus RFC", 1670000],
+["Matsu Lanca 4x4", 1440000],
+["Fia-Te Double", 1200000],
+["Missah 750x", 1200000],
+["Vemca K4 G", 1200000],
+["Mandalorian JBC-12", 1060000],
+["Missah Silva", 1220000],
+["Jipao Pistola", 1230000],
+["Leskus FP 50", 1050000],
+["Merquis ZLA 45", 1000000],
+["Merquis GLF63", 926000],
+["Mata Piada", 895000],
+["DOGO Carrega", 863000],
+["Merquis JF", 445000],
+["Vemca K3 F", 307000],
+["Fia-Te UmDois", 292500],
+["Chule Curgete", 243500],
+["Ratos Rotos Esporte", 222200],
+["Skami Truk", 205000],
+["Merquis SLX", 192000],
+["Mine Copa S", 182500],
+["Holde TipeRar", 138300],
+["Toyoda AFF67", 122700],
+["Merquis F55", 105800],
+["Lokswag Brasiuiu", 87500],
+["Holde Proluiz", 79200],
+["Fia-Te 10026p", 60600]
+];
 
-let rowsData = [];
-let asc = true;
+const carList = document.getElementById("carList");
 
-function parseValue(v){
-  if(v.includes("M")) return parseFloat(v)*1000000;
-  if(v.includes("K")) return parseFloat(v)*1000;
-  return parseFloat(v);
+function renderCars(list){
+    carList.innerHTML = "";
+    list.forEach(car=>{
+        const index = cars.indexOf(car);
+        const div = document.createElement("div");
+        div.className="car";
+        div.innerHTML=`
+            <label>
+                <input type="checkbox" value="${index}">
+                ${car[0]}
+            </label>
+            <span class="price">$${car[1].toLocaleString()}</span>
+        `;
+        carList.appendChild(div);
+    });
 }
 
-fetch(url)
-.then(r => r.text())
-.then(t => {
+renderCars(cars);
 
-  document.getElementById("loader").style.display = "none";
-  document.getElementById("table").style.display = "table";
+function generate(){
+    const markup = parseFloat(document.getElementById("markup").value) || 1;
+    const checked = document.querySelectorAll("input[type=checkbox]:checked");
 
-  const lines = t.trim().split("\n").slice(1);
+    let output="**SELLING**\n\n";
 
-  lines.forEach(l => {
-
-    const c = l.split(",");
-    const valueNum = parseValue(c[1]);
-
-    let trendClass = "equal";
-    if(c[2].includes("+")) trendClass = "rising";
-    if(c[2].includes("-")) trendClass = "falling";
-
-    rowsData.push({
-      name: c[0],
-      value: c[1],
-      valueNum: valueNum,
-      trend: c[2],
-      trendClass: trendClass
+    checked.forEach(box=>{
+        const car = cars[box.value];
+        const price = Math.round(car[1]*markup).toLocaleString();
+        output += `${car[0]} - $${price}\n`;
     });
 
-  });
-
-  renderTable();
-  document.getElementById("updated").innerText =
-    "Last Updated: " + new Date().toLocaleString();
-
-});
-
-function renderTable() {
-
-  const tbody = document.querySelector("tbody");
-  tbody.innerHTML = "";
-
-  rowsData.forEach(r => {
-
-    tbody.innerHTML += `
-      <tr>
-        <td>${r.name}</td>
-        <td>${r.value}</td>
-        <td class='${r.trendClass}'>
-          ${r.trend}
-          <button class="arrowbtn up" onclick="openModal('${r.name}')">⬆</button>
-          <button class="arrowbtn down" onclick="openModal('${r.name}')">⬇</button>
-        </td>
-      </tr>
-    `;
-
-  });
-
+    document.getElementById("output").value=output;
 }
 
-function sortValue() {
-  rowsData.sort((a,b) => asc ? a.valueNum - b.valueNum : b.valueNum - a.valueNum);
-  asc = !asc;
-  renderTable();
+function copyOutput(){
+    const text = document.getElementById("output");
+    text.select();
+    document.execCommand("copy");
 }
 
-document.getElementById("search").addEventListener("keyup", e => {
-
-  const f = e.target.value.toLowerCase();
-  const trs = document.querySelectorAll("tbody tr");
-
-  trs.forEach(tr => {
-    tr.style.display =
-      tr.children[0].innerText.toLowerCase().includes(f) ? "" : "none";
-  });
-
-});
-
-let selectedCar = "";
-
-function openModal(car){
-  selectedCar = car;
-  document.getElementById("modal").style.display = "flex";
-  document.getElementById("modalTitle").innerText = car;
+function selectAll(){
+    document.querySelectorAll("input[type=checkbox]").forEach(c=>c.checked=true);
 }
 
-function closeModal(){
-  document.getElementById("modal").style.display = "none";
-  document.getElementById("priceInput").value = "";
+function clearAll(){
+    document.querySelectorAll("input[type=checkbox]").forEach(c=>c.checked=false);
 }
 
-function sendSuggestion(){
-
-  const price = document.getElementById("priceInput").value;
-
-  if(!price){
-    alert("enter price first");
-    return;
-  }
-
-  fetch("https://docs.google.com/forms/d/e/1FAIpQLSfSltHQYIVrIDfxjMhnZk0Qv6h0kMfAjE33cgNMEnkjpa0ucA/formResponse", {
-    method:"POST",
-    mode:"no-cors",
-    headers:{
-      "Content-Type":"application/x-www-form-urlencoded"
-    },
-    body:
-      "entry.1482059138=" + encodeURIComponent(selectedCar) +
-      "&entry.28434942=" + encodeURIComponent(price)
-  });
-
-  alert("Suggestion submitted 👍");
-  closeModal();
+function filterCars(){
+    const q = document.getElementById("search").value.toLowerCase();
+    const filtered = cars.filter(c=>c[0].toLowerCase().includes(q));
+    renderCars(filtered);
 }
 </script>
 
